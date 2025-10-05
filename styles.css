@@ -1,0 +1,157 @@
+/* 水印插件样式 */
+
+/* 模态框样式 */
+.watermark-modal {
+  --background-primary: var(--background-primary);
+  --background-secondary: var(--background-secondary);
+  --text-primary: var(--text-primary);
+  --text-secondary: var(--text-secondary);
+  --background-modifier-border: var(--background-modifier-border);
+  --interactive-hover: var(--interactive-hover);
+  --interactive-active: var(--interactive-active);
+}
+
+/* 预览画布样式 */
+.watermark-modal canvas {
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 按钮样式 */
+.watermark-modal button {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.watermark-modal button:hover {
+  background-color: var(--interactive-hover);
+}
+
+.watermark-modal button:active {
+  background-color: var(--interactive-active);
+}
+
+.watermark-modal button.mod-cta {
+  background-color: var(--interactive-accent);
+  color: white;
+  border: none;
+}
+
+.watermark-modal button.mod-cta:hover {
+  background-color: var(--interactive-accent-hover);
+}
+
+/* 设置项样式 */
+.watermark-modal .setting-item {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.watermark-modal .setting-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.watermark-modal .setting-item-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.watermark-modal .setting-item-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+/* 输入框样式 */
+.watermark-modal input[type="text"],
+.watermark-modal select {
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 6px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.watermark-modal input[type="text"]:focus,
+.watermark-modal select:focus {
+  outline: none;
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+}
+
+/* 滑块样式 */
+.watermark-modal input[type="range"] {
+  width: 100%;
+}
+
+.watermark-modal .setting-item-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 文件列表样式 */
+.watermark-modal .file-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.watermark-modal .file-list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 通知样式 */
+.watermark-notice {
+  font-size: 14px;
+  font-weight: 500;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--background-modifier-border);
+}
+
+/* 面板布局 */
+.watermark-modal .panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.watermark-modal .panel-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.watermark-modal .panel-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .watermark-modal > div {
+    flex-direction: column !important;
+  }
+  
+  .watermark-modal .left-panel,
+  .watermark-modal .right-panel {
+    min-width: auto !important;
+  }
+}

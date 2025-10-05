@@ -1,0 +1,28 @@
+{
+  "name": "obsidian-image-watermark",
+  "version": "1.0.0",
+  "description": "为 Obsidian 笔记中的图片添加自定义水印",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "plugin",
+    "watermark",
+    "image"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.14.47",
+    "obsidian": "^0.16.3",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  }
+}

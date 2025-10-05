@@ -1,0 +1,10 @@
+{
+  "defaultWatermarkText": "Confidential",
+  "defaultOpacity": 50,
+  "defaultSize": 12,
+  "defaultPosition": "center",
+  "defaultColor": "#bab0b0",
+  "defaultTemplate": null,
+  "language": "en",
+  "watermarkTemplates": []
+}
