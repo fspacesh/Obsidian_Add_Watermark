@@ -1,6 +1,6 @@
 # Add_Watermark 加水印
 
-[English](README-en.md) | [中文](README-zh.md)
+[English](README-en.md) | [中文](README-CN.md)
 
 <!-- 以下是英文说明 -->
 ## English
