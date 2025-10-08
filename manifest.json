@@ -3,9 +3,10 @@
   "name": "AddWatermark",
   "version": "1.0.0",
   "minAppVersion": "0.16.0",
-  "description": "为 Obsidian 笔记中的图片添加自定义水印，保护您的知识产权",
+  "description": "Add a watermark",
   "author": "",
   "authorUrl": "",
   "isDesktopOnly": true
 
 }
+
