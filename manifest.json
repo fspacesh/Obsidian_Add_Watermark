@@ -2,10 +2,14 @@
   "id": "image-watermark",
   "name": "AddWatermark",
   "version": "1.0.0",
+  "minAppVersion": "0.16.0",
   "description": "Add custom watermarks to images in notes to protect your intellectual property.",
-  "author": "fspacesh",
+  "author": "",
+  "authorUrl": "",
+  "isDesktopOnly": true
 
 }
+
 
 
 
