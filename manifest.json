@@ -2,11 +2,11 @@
   "id": "image-watermark",
   "name": "AddWatermark",
   "version": "1.0.0",
-  "minAppVersion": "0.16.0",
-  "description": "Add a watermark",
-  "author": "",
-  "authorUrl": "",
+  "description": "Add custom watermarks to images in notes to protect your intellectual property.",
+  "author": "fspacesh",
+  "authorUrl": "https://github.com/fspacesh/Obsidian_Add_Watermark",
   "isDesktopOnly": true
 
 }
+
 
