@@ -75,9 +75,22 @@ The plugin provides a clean settings panel with a functional selection area on t
 - Processing large images may consume significant system resources, please be patient
 - If you encounter issues during use, try restarting Obsidian or contact the plugin developer
 
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. Fork the repository
+2. Create a new branch for your feature or bug fix
+3. Make your changes
+4. Commit your changes with a clear message
+5. Push to your branch
+6. Create a pull request
+
+Please ensure your code follows the existing style and includes appropriate tests.
+
 ## License
 
-This plugin is open-sourced under the MIT License.
+This plugin is open-sourced under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Changelog
 
