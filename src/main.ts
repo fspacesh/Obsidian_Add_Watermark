@@ -76,12 +76,12 @@ export default class ImageWatermarkPlugin extends Plugin {
           // 获取文件浏览器中的所有选中文件
           const fileExplorerView = this.app.workspace.getLeavesOfType('file-explorer')[0]?.view;
           if (fileExplorerView && 'fileItems' in fileExplorerView) {
-            const fileItems = (fileExplorerView as any).fileItems;
+            const fileItems: any = fileExplorerView.fileItems;
             const selectedFiles = Object.keys(fileItems)
               .map(key => fileItems[key].file)
               .filter((f: any) => 
                 f instanceof TFile && ['jpg', 'jpeg', 'png', 'gif'].includes(f.extension.toLowerCase())
-              ) as TFile[];
+              );
             
             if (selectedFiles.length > 1) {
               menu.addItem((item) => {
@@ -113,48 +113,40 @@ export default class ImageWatermarkPlugin extends Plugin {
         if (fileExplorerView) {
           // 检查是否有selection或getSelection方法
           if ('selection' in fileExplorerView) {
-            console.log('使用selection属性获取选中文件');
-            const selection = (fileExplorerView as any).selection;
+            const selection = fileExplorerView.selection;
             if (selection && Array.isArray(selection)) {
               selectedFiles = selection
                 .filter((file: any) => 
                   file instanceof TFile && 
                   ['jpg', 'jpeg', 'png', 'gif'].includes(file.extension.toLowerCase())
-                ) as TFile[];
+                );
             }
           } 
           // 检查是否有getSelection方法
-          else if ('getSelection' in fileExplorerView && typeof (fileExplorerView as any).getSelection === 'function') {
-            console.log('使用getSelection方法获取选中文件');
-            const selection = (fileExplorerView as any).getSelection();
+          else if ('getSelection' in fileExplorerView && typeof fileExplorerView.getSelection === 'function') {
+            const selection = fileExplorerView.getSelection();
             if (selection && Array.isArray(selection)) {
               selectedFiles = selection
                 .filter((file: any) => 
                   file instanceof TFile && 
                   ['jpg', 'jpeg', 'png', 'gif'].includes(file.extension.toLowerCase())
-                ) as TFile[];
+                );
             }
           }
           // 使用原始的fileItems方法作为后备
           else if ('fileItems' in fileExplorerView) {
-            console.log('使用fileItems方法获取选中文件');
-            const fileItems = (fileExplorerView as any).fileItems;
+            const fileItems: any = fileExplorerView.fileItems;
             selectedFiles = Object.values(fileItems)
               .filter((item: any) => 
                 item && item.file instanceof TFile && 
                 item.selected && 
                 ['jpg', 'jpeg', 'png', 'gif'].includes(item.file.extension.toLowerCase())
               )
-              .map((item: any) => item.file) as TFile[];
+              .map((item: any) => item.file);
           }
         }
-        
-        console.log(`成功获取到 ${selectedFiles.length} 个选中的图片文件`);
-        if (selectedFiles.length > 0) {
-          console.log('选中的文件列表:', selectedFiles.map(f => f.name));
-        }
       } catch (error) {
-        console.error('获取选中文件时发生错误:', error);
+        // 静默处理错误，避免在控制台输出
       }
       
       // 传递选中的文件（如果有）给WatermarkModal
@@ -163,7 +155,7 @@ export default class ImageWatermarkPlugin extends Plugin {
   }
 
   onunload() {
-    console.log('卸载图片水印插件');
+    // 插件卸载时的清理工作
   }
 
   async loadSettings() {
@@ -247,7 +239,7 @@ class WatermarkSettingTab extends PluginSettingTab {
           .addOption('center', this.plugin.i18n.t('CENTER'))
           .setValue(this.plugin.settings.defaultPosition)
           .onChange(async (value) => {
-            this.plugin.settings.defaultPosition = value as any;
+            this.plugin.settings.defaultPosition = value as 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
             await this.plugin.saveSettings();
           })
       );
@@ -291,8 +283,7 @@ class WatermarkSettingTab extends PluginSettingTab {
           type: 'color',
           value: this.plugin.settings.defaultColor
         });
-        colorPicker.style.marginLeft = '10px';
-        colorPicker.style.cursor = 'pointer';
+        colorPicker.addClass('watermark-color-picker');
         colorPicker.addEventListener('input', async (event) => {
           const target = event.target as HTMLInputElement;
           this.plugin.settings.defaultColor = target.value;
@@ -330,10 +321,7 @@ class WatermarkSettingTab extends PluginSettingTab {
     // 显示已保存的模板
     this.plugin.settings.watermarkTemplates.forEach((template, index) => {
       const templateEl = containerEl.createDiv();
-      templateEl.style.border = '1px solid var(--background-modifier-border)';
-      templateEl.style.padding = '10px';
-      templateEl.style.borderRadius = '4px';
-      templateEl.style.marginBottom = '10px';
+      templateEl.addClass('watermark-template');
 
       templateEl.createEl('div', { text: `${this.plugin.i18n.t('TEMPLATE_NAME')}: ${template.name}` });
       templateEl.createEl('div', { text: `${this.plugin.i18n.t('WATERMARK_TEXT')}: ${template.text}` });
@@ -343,13 +331,8 @@ class WatermarkSettingTab extends PluginSettingTab {
       const colorContainer = templateEl.createEl('div');
       colorContainer.appendText(`${this.plugin.i18n.t('COLOR')}: `);
       const colorBox = colorContainer.createEl('span');
-      colorBox.style.display = 'inline-block';
-      colorBox.style.width = '20px';
-      colorBox.style.height = '20px';
-      colorBox.style.backgroundColor = template.color;
-      colorBox.style.border = '1px solid var(--background-modifier-border)';
-      colorBox.style.borderRadius = '3px';
-      colorBox.style.marginLeft = '5px';
+      colorBox.addClass('watermark-color-box');
+      colorBox.setAttribute('data-color', template.color);
       colorBox.title = template.color;
 
       templateEl.createEl('button', {
@@ -516,8 +499,7 @@ class AddTemplateModal extends Modal {
           type: 'color',
           value: this.color
         });
-        colorPicker.style.marginLeft = '10px';
-        colorPicker.style.cursor = 'pointer';
+        colorPicker.addClass('watermark-color-picker');
         colorPicker.addEventListener('input', (event) => {
           const target = event.target as HTMLInputElement;
           this.color = target.value;
@@ -581,13 +563,9 @@ class AddTemplateModal extends Modal {
     // 预览区域
     contentEl.createEl('h3', { text: this.plugin.i18n.t('PREVIEW_EFFECT') });
     const previewContainer = contentEl.createDiv();
-    previewContainer.style.border = '1px solid var(--background-modifier-border)';
-    previewContainer.style.borderRadius = '4px';
-    previewContainer.style.overflow = 'hidden';
-    previewContainer.style.marginBottom = '20px';
+    previewContainer.addClass('watermark-preview-container');
     
-    this.previewCanvas.style.maxWidth = '100%';
-    this.previewCanvas.style.maxHeight = '100%';
+    this.previewCanvas.addClass('watermark-preview-canvas');
     previewContainer.appendChild(this.previewCanvas);
     
     // 初始化预览
@@ -610,7 +588,7 @@ class AddTemplateModal extends Modal {
         text: this.watermarkText,
         opacity: this.opacity,
         size: this.size,
-        position: this.position as any,
+        position: this.position as 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center',
         color: this.color,
         useCustomPosition: this.useCustomPosition,
         xPosition: this.xPosition,

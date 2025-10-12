@@ -167,36 +167,23 @@ var WatermarkModal = class extends import_obsidian.Modal {
   onOpen() {
     const { contentEl } = this;
     contentEl.className = "watermark-modal";
-    contentEl.style.display = "flex";
-    contentEl.style.flexDirection = "column";
-    contentEl.style.height = "100%";
+    contentEl.addClass("watermark-flex-column");
     const header = contentEl.createDiv();
-    header.style.marginBottom = "20px";
+    header.addClass("watermark-header");
     header.createEl("h2", { text: this.i18n.t("ADD_WATERMARK_TITLE") });
     header.createEl("p", { text: this.i18n.t("ADD_WATERMARK_DESC") });
     const mainContent = contentEl.createDiv();
-    mainContent.style.flex = "1";
-    mainContent.style.overflow = "auto";
+    mainContent.addClass("watermark-main-content");
     const functionPanel = mainContent.createDiv();
-    functionPanel.style.display = "flex";
-    functionPanel.style.flexDirection = "column";
-    functionPanel.style.gap = "15px";
+    functionPanel.addClass("watermark-function-panel");
     const fileSelection = functionPanel.createDiv();
     fileSelection.createEl("h3", { text: this.i18n.t("Select_Image") });
     if (this.selectedFiles.length > 0) {
       const filesList = fileSelection.createDiv();
-      filesList.style.maxHeight = "150px";
-      filesList.style.overflowY = "auto";
-      filesList.style.border = "1px solid var(--background-modifier-border)";
-      filesList.style.borderRadius = "4px";
-      filesList.style.padding = "10px";
+      filesList.addClass("watermark-files-list");
       this.selectedFiles.forEach((file, index) => {
         const fileItem = filesList.createDiv();
-        fileItem.style.display = "flex";
-        fileItem.style.justifyContent = "space-between";
-        fileItem.style.alignItems = "center";
-        fileItem.style.padding = "5px 0";
-        fileItem.style.borderBottom = index < this.selectedFiles.length - 1 ? "1px solid var(--background-modifier-border)" : "none";
+        fileItem.addClass("watermark-file-item");
         fileItem.createSpan({ text: file.name });
         fileItem.createEl("button", { text: "delete" }).addEventListener("click", () => {
           this.selectedFiles.splice(index, 1);
@@ -328,8 +315,7 @@ var WatermarkModal = class extends import_obsidian.Modal {
       type: "color",
       value: this.watermarkOptions.color
     });
-    colorPicker.style.marginLeft = "10px";
-    colorPicker.style.cursor = "pointer";
+    colorPicker.addClass("watermark-color-picker");
     colorPicker.addEventListener("input", (event) => {
       const target = event.target;
       if (this.colorComponent)
@@ -377,21 +363,12 @@ var WatermarkModal = class extends import_obsidian.Modal {
     previewSection.createEl("h3", { text: this.i18n.t("PREVIEW_EFFECT") });
     const previewContainer = previewSection.createDiv();
     previewContainer.classList.add("preview-container");
-    previewContainer.style.height = "300px";
-    previewContainer.style.display = "flex";
-    previewContainer.style.justifyContent = "center";
-    previewContainer.style.alignItems = "center";
-    previewContainer.style.border = "1px solid var(--background-modifier-border)";
-    previewContainer.style.borderRadius = "4px";
-    previewContainer.style.overflow = "hidden";
-    previewContainer.style.marginBottom = "20px";
-    this.previewCanvas.style.maxWidth = "100%";
-    this.previewCanvas.style.maxHeight = "100%";
+    previewContainer.addClass("watermark-preview-container");
+    this.previewCanvas.addClass("watermark-preview-canvas");
     previewContainer.appendChild(this.previewCanvas);
     const applyButton = functionPanel.createEl("button", {
       text: this.i18n.t("APPLY_WATERMARK"),
-      cls: "mod-cta",
-      attr: { style: "width: 100%; margin-bottom: 20px;" }
+      cls: "mod-cta watermark-apply-button"
     });
     applyButton.addEventListener("click", async () => {
       if (this.selectedFiles.length === 0) {
@@ -426,16 +403,13 @@ var WatermarkModal = class extends import_obsidian.Modal {
     }
   }
   updatePreview() {
-    console.log("updatePreview called with options:", this.watermarkOptions);
     if (!this.previewCanvas || !this.previewCanvas.isConnected) {
-      console.log("Recreating preview canvas");
       const existingCanvas = document.querySelector(".preview-container canvas");
       if (existingCanvas) {
         existingCanvas.remove();
       }
       this.previewCanvas = document.createElement("canvas");
-      this.previewCanvas.style.maxWidth = "100%";
-      this.previewCanvas.style.maxHeight = "100%";
+      this.previewCanvas.addClass("watermark-preview-canvas");
       const previewContainer = document.querySelector(".preview-container");
       if (previewContainer) {
         previewContainer.appendChild(this.previewCanvas);
@@ -444,7 +418,6 @@ var WatermarkModal = class extends import_obsidian.Modal {
     const canvas = this.previewCanvas;
     const ctx = canvas.getContext("2d");
     if (!ctx) {
-      console.log("Failed to get canvas context");
       return;
     }
     canvas.width = 300;
@@ -459,15 +432,12 @@ var WatermarkModal = class extends import_obsidian.Modal {
     ctx.font = "12px sans-serif";
     ctx.fillStyle = "#666";
     ctx.fillText(this.i18n.t("PREVIEW_IMAGE_DESC"), canvas.width / 2, canvas.height / 2 + 10);
-    console.log("Drawing watermark");
     this.drawWatermark(ctx, canvas.width, canvas.height);
-    canvas.style.display = "none";
+    canvas.addClass("watermark-hidden");
     canvas.offsetHeight;
-    canvas.style.display = "";
-    console.log("updatePreview completed");
+    canvas.removeClass("watermark-hidden");
   }
   drawWatermark(ctx, width, height) {
-    console.log("drawWatermark called with:", { width, height, options: this.watermarkOptions });
     const { text, opacity, size, position, color, useCustomPosition, xPosition, yPosition } = this.watermarkOptions;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -487,7 +457,6 @@ var WatermarkModal = class extends import_obsidian.Modal {
       y = height * yPosition / 100;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      console.log("Using custom position:", { x, y, xPosition, yPosition });
     } else {
       const margin = Math.min(size, width / 4, height / 4);
       switch (position) {
@@ -523,10 +492,8 @@ var WatermarkModal = class extends import_obsidian.Modal {
           ctx.textBaseline = "middle";
           break;
       }
-      console.log("Using preset position:", { position, x, y, size, width, height });
     }
     ctx.fillText(text, x, y);
-    console.log("Watermark drawn:", { text, x, y, textAlign: ctx.textAlign, textBaseline: ctx.textBaseline });
     ctx.restore();
   }
   hexToRgb(hex) {
@@ -572,7 +539,6 @@ var WatermarkModal = class extends import_obsidian.Modal {
         const buffer = await blob.arrayBuffer();
         await adapter.writeBinary(newFilePath, new Uint8Array(buffer));
         URL.revokeObjectURL(imgUrl);
-        console.log(`\u5DF2\u4E3A\u56FE\u7247\u6DFB\u52A0\u6C34\u5370\u5E76\u4FDD\u5B58\u4E3A: ${newFilePath}`);
       } catch (error) {
         console.error(`\u5904\u7406\u56FE\u7247 ${file.name} \u65F6\u51FA\u9519:`, error);
         alert(`${this.i18n.t("ERROR_PROCESSING_IMAGE")} ${file.name}: ${error instanceof Error ? error.message : "\u672A\u77E5\u9519\u8BEF"}`);
@@ -648,7 +614,6 @@ var ImageWatermarkPlugin = class extends import_obsidian2.Plugin {
         const fileExplorerView = (_a = this.app.workspace.getLeavesOfType("file-explorer")[0]) == null ? void 0 : _a.view;
         if (fileExplorerView) {
           if ("selection" in fileExplorerView) {
-            console.log("\u4F7F\u7528selection\u5C5E\u6027\u83B7\u53D6\u9009\u4E2D\u6587\u4EF6");
             const selection = fileExplorerView.selection;
             if (selection && Array.isArray(selection)) {
               selectedFiles = selection.filter(
@@ -656,7 +621,6 @@ var ImageWatermarkPlugin = class extends import_obsidian2.Plugin {
               );
             }
           } else if ("getSelection" in fileExplorerView && typeof fileExplorerView.getSelection === "function") {
-            console.log("\u4F7F\u7528getSelection\u65B9\u6CD5\u83B7\u53D6\u9009\u4E2D\u6587\u4EF6");
             const selection = fileExplorerView.getSelection();
             if (selection && Array.isArray(selection)) {
               selectedFiles = selection.filter(
@@ -664,25 +628,18 @@ var ImageWatermarkPlugin = class extends import_obsidian2.Plugin {
               );
             }
           } else if ("fileItems" in fileExplorerView) {
-            console.log("\u4F7F\u7528fileItems\u65B9\u6CD5\u83B7\u53D6\u9009\u4E2D\u6587\u4EF6");
             const fileItems = fileExplorerView.fileItems;
             selectedFiles = Object.values(fileItems).filter(
               (item) => item && item.file instanceof import_obsidian2.TFile && item.selected && ["jpg", "jpeg", "png", "gif"].includes(item.file.extension.toLowerCase())
             ).map((item) => item.file);
           }
         }
-        console.log(`\u6210\u529F\u83B7\u53D6\u5230 ${selectedFiles.length} \u4E2A\u9009\u4E2D\u7684\u56FE\u7247\u6587\u4EF6`);
-        if (selectedFiles.length > 0) {
-          console.log("\u9009\u4E2D\u7684\u6587\u4EF6\u5217\u8868:", selectedFiles.map((f) => f.name));
-        }
       } catch (error) {
-        console.error("\u83B7\u53D6\u9009\u4E2D\u6587\u4EF6\u65F6\u53D1\u751F\u9519\u8BEF:", error);
       }
       new WatermarkModal(this.app, this, selectedFiles).open();
     });
   }
   onunload() {
-    console.log("\u5378\u8F7D\u56FE\u7247\u6C34\u5370\u63D2\u4EF6");
   }
   async loadSettings() {
     this.settings = { ...DEFAULT_SETTINGS, ...await this.loadData() };
@@ -744,8 +701,7 @@ var WatermarkSettingTab = class extends import_obsidian2.PluginSettingTab {
         type: "color",
         value: this.plugin.settings.defaultColor
       });
-      colorPicker.style.marginLeft = "10px";
-      colorPicker.style.cursor = "pointer";
+      colorPicker.addClass("watermark-color-picker");
       colorPicker.addEventListener("input", async (event) => {
         const target = event.target;
         this.plugin.settings.defaultColor = target.value;
@@ -769,23 +725,15 @@ var WatermarkSettingTab = class extends import_obsidian2.PluginSettingTab {
     containerEl.createEl("p", { text: this.plugin.i18n.t("WATERMARK_TEMPLATE_MANAGEMENT_DESC") });
     this.plugin.settings.watermarkTemplates.forEach((template, index) => {
       const templateEl = containerEl.createDiv();
-      templateEl.style.border = "1px solid var(--background-modifier-border)";
-      templateEl.style.padding = "10px";
-      templateEl.style.borderRadius = "4px";
-      templateEl.style.marginBottom = "10px";
+      templateEl.addClass("watermark-template");
       templateEl.createEl("div", { text: `${this.plugin.i18n.t("TEMPLATE_NAME")}: ${template.name}` });
       templateEl.createEl("div", { text: `${this.plugin.i18n.t("WATERMARK_TEXT")}: ${template.text}` });
       templateEl.createEl("div", { text: `${this.plugin.i18n.t("OPACITY")}: ${template.opacity}%, ${this.plugin.i18n.t("FONT_SIZE")}: ${template.size}px, ${this.plugin.i18n.t("POSITION")}: ${this.getPositionText(template.position)}` });
       const colorContainer = templateEl.createEl("div");
       colorContainer.appendText(`${this.plugin.i18n.t("COLOR")}: `);
       const colorBox = colorContainer.createEl("span");
-      colorBox.style.display = "inline-block";
-      colorBox.style.width = "20px";
-      colorBox.style.height = "20px";
-      colorBox.style.backgroundColor = template.color;
-      colorBox.style.border = "1px solid var(--background-modifier-border)";
-      colorBox.style.borderRadius = "3px";
-      colorBox.style.marginLeft = "5px";
+      colorBox.addClass("watermark-color-box");
+      colorBox.setAttribute("data-color", template.color);
       colorBox.title = template.color;
       templateEl.createEl("button", {
         text: this.plugin.i18n.t("DELETE")
@@ -868,8 +816,7 @@ var AddTemplateModal = class extends import_obsidian2.Modal {
         type: "color",
         value: this.color
       });
-      colorPicker.style.marginLeft = "10px";
-      colorPicker.style.cursor = "pointer";
+      colorPicker.addClass("watermark-color-picker");
       colorPicker.addEventListener("input", (event) => {
         const target = event.target;
         this.color = target.value;
@@ -905,12 +852,8 @@ var AddTemplateModal = class extends import_obsidian2.Modal {
     });
     contentEl.createEl("h3", { text: this.plugin.i18n.t("PREVIEW_EFFECT") });
     const previewContainer = contentEl.createDiv();
-    previewContainer.style.border = "1px solid var(--background-modifier-border)";
-    previewContainer.style.borderRadius = "4px";
-    previewContainer.style.overflow = "hidden";
-    previewContainer.style.marginBottom = "20px";
-    this.previewCanvas.style.maxWidth = "100%";
-    this.previewCanvas.style.maxHeight = "100%";
+    previewContainer.addClass("watermark-preview-container");
+    this.previewCanvas.addClass("watermark-preview-canvas");
     previewContainer.appendChild(this.previewCanvas);
     this.updatePreview();
     const saveBtn = contentEl.createEl("button", {

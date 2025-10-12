@@ -66,26 +66,21 @@ export class WatermarkModal extends Modal {
   onOpen() {
     const { contentEl } = this;
     contentEl.className = 'watermark-modal';
-    contentEl.style.display = 'flex';
-    contentEl.style.flexDirection = 'column';
-    contentEl.style.height = '100%';
+    contentEl.addClass('watermark-flex-column');
 
     // 创建顶部标题和说明
     const header = contentEl.createDiv();
-    header.style.marginBottom = '20px';
+    header.addClass('watermark-header');
     header.createEl('h2', { text: this.i18n.t('ADD_WATERMARK_TITLE') });
     header.createEl('p', { text: this.i18n.t('ADD_WATERMARK_DESC') });
 
     // 主内容区域
     const mainContent = contentEl.createDiv();
-    mainContent.style.flex = '1';
-    mainContent.style.overflow = 'auto';
+    mainContent.addClass('watermark-main-content');
 
     // 功能选择区
     const functionPanel = mainContent.createDiv();
-    functionPanel.style.display = 'flex';
-    functionPanel.style.flexDirection = 'column';
-    functionPanel.style.gap = '15px';
+    functionPanel.addClass('watermark-function-panel');
 
     // 图片选择区域
     const fileSelection = functionPanel.createDiv();
@@ -94,19 +89,11 @@ export class WatermarkModal extends Modal {
     // 显示已选文件
     if (this.selectedFiles.length > 0) {
       const filesList = fileSelection.createDiv();
-      filesList.style.maxHeight = '150px';
-      filesList.style.overflowY = 'auto';
-      filesList.style.border = '1px solid var(--background-modifier-border)';
-      filesList.style.borderRadius = '4px';
-      filesList.style.padding = '10px';
+      filesList.addClass('watermark-files-list');
 
       this.selectedFiles.forEach((file, index) => {
         const fileItem = filesList.createDiv();
-        fileItem.style.display = 'flex';
-        fileItem.style.justifyContent = 'space-between';
-        fileItem.style.alignItems = 'center';
-        fileItem.style.padding = '5px 0';
-        fileItem.style.borderBottom = index < this.selectedFiles.length - 1 ? '1px solid var(--background-modifier-border)' : 'none';
+        fileItem.addClass('watermark-file-item');
 
         fileItem.createSpan({ text: file.name });
         fileItem.createEl('button', { text: 'delete' }).addEventListener('click', () => {
@@ -126,7 +113,8 @@ export class WatermarkModal extends Modal {
     selectButton.addEventListener('click', async () => {
         try {
           // 使用Obsidian的文件选择对话框
-          const fileSystemAdapter = this.app.vault.adapter as FileSystemAdapter;
+    // 获取文件系统适配器
+    const fileSystemAdapter: any = this.app.vault.adapter;
           const folderPath = await fileSystemAdapter.getBasePath();
           
           // 创建一个隐藏的文件输入元素
@@ -276,7 +264,7 @@ export class WatermarkModal extends Modal {
           .addOption('center', this.i18n.t('CENTER'))
           .setValue(this.watermarkOptions.position)
           .onChange((value) => {
-            this.watermarkOptions.position = value as any;
+            this.watermarkOptions.position = value as 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
             this.watermarkOptions.useCustomPosition = false;
             if (this.customPositionToggle) this.customPositionToggle.setValue(false);
             this.selectedTemplate = null;
@@ -309,8 +297,7 @@ export class WatermarkModal extends Modal {
       type: 'color',
       value: this.watermarkOptions.color
     });
-    colorPicker.style.marginLeft = '10px';
-    colorPicker.style.cursor = 'pointer';
+    colorPicker.addClass('watermark-color-picker');
     colorPicker.addEventListener('input', (event) => {
       const target = event.target as HTMLInputElement;
       if (this.colorComponent) this.colorComponent.setValue(target.value);
@@ -388,24 +375,15 @@ export class WatermarkModal extends Modal {
     // 预览容器
     const previewContainer = previewSection.createDiv();
     previewContainer.classList.add('preview-container');
-    previewContainer.style.height = '300px';
-    previewContainer.style.display = 'flex';
-    previewContainer.style.justifyContent = 'center';
-    previewContainer.style.alignItems = 'center';
-    previewContainer.style.border = '1px solid var(--background-modifier-border)';
-    previewContainer.style.borderRadius = '4px';
-    previewContainer.style.overflow = 'hidden';
-    previewContainer.style.marginBottom = '20px';
+    previewContainer.addClass('watermark-preview-container');
     
-    this.previewCanvas.style.maxWidth = '100%';
-    this.previewCanvas.style.maxHeight = '100%';
+    this.previewCanvas.addClass('watermark-preview-canvas');
     previewContainer.appendChild(this.previewCanvas);
 
     // 应用按钮
     const applyButton = functionPanel.createEl('button', {
       text: this.i18n.t('APPLY_WATERMARK'),
-      cls: 'mod-cta',
-      attr: { style: 'width: 100%; margin-bottom: 20px;' }
+      cls: 'mod-cta watermark-apply-button'
     });
 
     applyButton.addEventListener('click', async () => {
@@ -449,19 +427,15 @@ export class WatermarkModal extends Modal {
   }
 
   private updatePreview() {
-    console.log('updatePreview called with options:', this.watermarkOptions);
-    
     // 检查预览画布是否存在，如果不存在则重新创建
     if (!this.previewCanvas || !this.previewCanvas.isConnected) {
-      console.log('Recreating preview canvas');
       // 如果预览画布不存在或已从DOM中移除，重新创建
       const existingCanvas = document.querySelector('.preview-container canvas');
       if (existingCanvas) {
         existingCanvas.remove();
       }
       this.previewCanvas = document.createElement('canvas');
-      this.previewCanvas.style.maxWidth = '100%';
-      this.previewCanvas.style.maxHeight = '100%';
+      this.previewCanvas.addClass('watermark-preview-canvas');
       
       // 将新画布添加到预览容器
       const previewContainer = document.querySelector('.preview-container');
@@ -473,7 +447,6 @@ export class WatermarkModal extends Modal {
     const canvas = this.previewCanvas;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      console.log('Failed to get canvas context');
       return;
     }
 
@@ -498,19 +471,15 @@ export class WatermarkModal extends Modal {
     ctx.fillText(this.i18n.t('PREVIEW_IMAGE_DESC'), canvas.width / 2, canvas.height / 2 + 10);
 
     // 绘制水印 - 确保每次都能重新绘制
-    console.log('Drawing watermark');
     this.drawWatermark(ctx, canvas.width, canvas.height);
     
     // 强制重绘
-    canvas.style.display = 'none';
+    canvas.addClass('watermark-hidden');
     canvas.offsetHeight; // 触发重排
-    canvas.style.display = '';
-    
-    console.log('updatePreview completed');
+    canvas.removeClass('watermark-hidden');
   }
 
   private drawWatermark(ctx: CanvasRenderingContext2D, width: number, height: number) {
-    console.log('drawWatermark called with:', { width, height, options: this.watermarkOptions });
     const { text, opacity, size, position, color, useCustomPosition, xPosition, yPosition } = this.watermarkOptions;
     
     // 重置画布状态
@@ -543,7 +512,6 @@ export class WatermarkModal extends Modal {
       y = (height * yPosition) / 100;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      console.log('Using custom position:', { x, y, xPosition, yPosition });
     } else {
       // 使用预设位置
       const margin = Math.min(size, width / 4, height / 4); // 确保边距不会太大
@@ -580,12 +548,10 @@ export class WatermarkModal extends Modal {
           ctx.textBaseline = 'middle';
           break;
       }
-      console.log('Using preset position:', { position, x, y, size, width, height });
     }
 
     // 绘制水印文字
     ctx.fillText(text, x, y);
-    console.log('Watermark drawn:', { text, x, y, textAlign: ctx.textAlign, textBaseline: ctx.textBaseline });
     
     // 恢复画布状态
     ctx.restore();
@@ -606,7 +572,7 @@ export class WatermarkModal extends Modal {
   }
 
   private async applyWatermarkToImages() {
-    const adapter = this.app.vault.adapter as FileSystemAdapter;
+    const adapter = this.app.vault.adapter;
 
     for (const file of this.selectedFiles) {
       try {
@@ -657,8 +623,6 @@ export class WatermarkModal extends Modal {
         // 清理URL对象
         URL.revokeObjectURL(imgUrl);
 
-        console.log(`已为图片添加水印并保存为: ${newFilePath}`);
-
       } catch (error) {
         console.error(`处理图片 ${file.name} 时出错:`, error);
         alert(`${this.i18n.t('ERROR_PROCESSING_IMAGE')} ${file.name}: ${error instanceof Error ? error.message : '未知错误'}`);
@@ -680,32 +644,49 @@ class Notice {
   constructor(message: string, duration: number = 3000) {
     const notice = document.createElement('div');
     notice.className = 'watermark-notice';
-    notice.style.position = 'fixed';
-    notice.style.bottom = '20px';
-    notice.style.left = '50%';
-    notice.style.transform = 'translateX(-50%)';
-    notice.style.padding = '10px 20px';
-    notice.style.backgroundColor = 'var(--background-primary)';
-    notice.style.color = 'var(--text-primary)';
-    notice.style.borderRadius = '4px';
-    notice.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-    notice.style.zIndex = '9999';
-    notice.style.opacity = '0';
-    notice.style.transition = 'opacity 0.3s ease';
+    
+    // 使用CSS类而不是直接设置样式
+    const style = document.createElement('style');
+    style.textContent = `
+      .watermark-notice {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: var(--background-primary);
+        color: var(--text-primary);
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .watermark-notice.show {
+        opacity: 1;
+      }
+    `;
+    document.head.appendChild(style);
+    
     notice.textContent = message;
     
     document.body.appendChild(notice);
     
     // 显示通知
     setTimeout(() => {
-      notice.style.opacity = '1';
+      notice.classList.add('show');
     }, 10);
     
     // 自动隐藏
     setTimeout(() => {
-      notice.style.opacity = '0';
+      notice.classList.remove('show');
       setTimeout(() => {
-        document.body.removeChild(notice);
+        if (notice.parentNode) {
+          notice.parentNode.removeChild(notice);
+        }
+        if (style.parentNode) {
+          style.parentNode.removeChild(style);
+        }
       }, 300);
     }, duration);
   }

@@ -125,6 +125,107 @@
   border: 1px solid var(--background-modifier-border);
 }
 
+/* 颜色选择器样式 */
+.watermark-color-picker {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* 模板元素样式 */
+.watermark-template {
+  border: 1px solid var(--background-modifier-border);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* 颜色框样式 */
+.watermark-color-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 3px;
+  margin-left: 5px;
+}
+
+.watermark-color-box[data-color] {
+  background-color: attr(data-color color, var(--background-primary));
+}
+
+/* 应用水印按钮样式 */
+.watermark-apply-button {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* 预览容器样式 */
+.watermark-preview-container {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* 预览画布样式 */
+.watermark-preview-canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Flex column layout */
+.watermark-flex-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header styles */
+.watermark-header {
+  margin-bottom: 20px;
+}
+
+/* Main content styles */
+.watermark-main-content {
+  flex: 1;
+  overflow: auto;
+}
+
+/* Function panel styles */
+.watermark-function-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Files list styles */
+.watermark-files-list {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+/* File item styles */
+.watermark-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.watermark-file-item:last-child {
+  border-bottom: none;
+}
+
+/* Hidden element styles */
+.watermark-hidden {
+  display: none;
+}
+
 /* 面板布局 */
 .watermark-modal .panel {
   display: flex;
